@@ -14,8 +14,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/tyrauber/acts_rateable'
   s.licenses       = ['MIT']
   s.files = Dir['{app,config,db,lib}/**/*'] + ['MIT-LICENSE', 'Rakefile', 'README.rdoc']
-
-  s.add_dependency 'rails',  '~> 5'
+  
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'protected_attributes'
   s.add_development_dependency 'rspec-rails', '> 3.0'
