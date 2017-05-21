@@ -6,6 +6,7 @@ class ActsRateableMigration < ActiveRecord::Migration
       t.references :author, :polymorphic => true, :null => false
       t.references :container, :polymorphic => true, :null => false
       t.decimal :value, :default => 0
+      t.text :comment
       t.timestamps
     end
     add_index :ar_rates, [:resource_id, :resource_type]
@@ -19,7 +20,6 @@ class ActsRateableMigration < ActiveRecord::Migration
       t.integer :sum, :default => 0
       t.decimal :average, :default => 0
       t.decimal :estimate, :default => 0
-      t.text :comment
       t.timestamps
     end
     add_index :ar_ratings, [:resource_id, :resource_type]
