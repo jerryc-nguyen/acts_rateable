@@ -5,11 +5,12 @@ class ActsRateableMigration < ActiveRecord::Migration
       t.references :resource, :polymorphic => true, :null => false
       t.references :author, :polymorphic => true, :null => false
       t.integer :value, :default => 0
+      t.text :comment
       t.timestamps
     end
     add_index :ar_rates, [:resource_id, :resource_type]
     add_index :ar_rates, [:author_id, :author_type]
-    
+
     create_table :ar_ratings do |t|
       t.references :resource, :polymorphic => true, :null => false
       t.integer :total, :default => 0
