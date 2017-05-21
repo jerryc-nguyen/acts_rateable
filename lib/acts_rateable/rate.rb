@@ -5,6 +5,7 @@ module ActsRateable
 
     belongs_to :resource, polymorphic: true
     belongs_to :author, polymorphic: true
+    belongs_to :container, polymorphic: true
 
     validates :author, :resource, :value, presence: true
 
@@ -26,7 +27,7 @@ module ActsRateable
       return false
     end
 
-    def self.create(author, resource, value, comment)
+    def self.create(author, resource, value, comment, container = nil)
       return unless author && resource && value
 			atts = {
 			  resource_type: resource.class.base_class.name, resource_id: resource.id,
@@ -34,6 +35,10 @@ module ActsRateable
 			  value: value,
         comment: comment
 			}
+      if container.present?
+        atts[:container_id] = container.id
+        atts[:container_type] = container.class.base_class.name
+      end
 			rate = where(atts.except(:value)).first_or_initialize(atts)
 			rate.value = value
       rate.save
