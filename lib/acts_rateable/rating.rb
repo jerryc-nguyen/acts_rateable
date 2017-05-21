@@ -22,7 +22,7 @@ module ActsRateable
     end
 
     # RETURNS = {"total_ratings"=>"", "rating_sum"=>"", "rating_avg"=>""}
-    def self.values_for(resource)    
+    def self.values_for(resource)
       sql =   "SELECT COUNT(*) total_ratings, COALESCE(SUM(value),0) rating_sum, COALESCE(AVG(value),0) rating_avg "+
               "FROM ar_rates WHERE resource_type = '#{resource.class.base_class.name}' and resource_id = '#{resource.id}'"
       ActsRateable::Rate.connection.execute(sql).first
@@ -34,7 +34,7 @@ module ActsRateable
       estimate  = (local['total_ratings'].to_f / (local['total_ratings'].to_f+global['avg_num_ratings'].to_f)) * local['rating_avg'].to_f + (global['avg_num_ratings'].to_f / (local['total_ratings'].to_f+global['avg_num_ratings'].to_f)) *global['rating_avg'].to_f
       return    { 'global' => global, 'local' => local.merge!({ 'estimate' => estimate }) }
     end
-    
+
     protected
 
     def update_ratings
