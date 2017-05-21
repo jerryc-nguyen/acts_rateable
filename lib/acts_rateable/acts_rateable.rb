@@ -54,8 +54,8 @@ module ActsRateable
     end
 
     # Rates a resource by an author with a given value.
-    def rate( resource, value, comment=nil)
-      ActsRateable::Rate.create(self, resource, value, comment)
+    def rate( resource, value, comment=nil, container)
+      ActsRateable::Rate.create(self, resource, value, comment, container)
     end
 
   end
