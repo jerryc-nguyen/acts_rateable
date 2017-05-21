@@ -10,37 +10,42 @@ module ActsRateable
     validates :author, :resource, :value, presence: true
 
     validates_numericality_of :value, :greater_than_or_equal_to => 1, :less_than_or_equal_to => 100
-  	validates_uniqueness_of :author_id, :scope => [:author_type, :resource_id, :resource_type]
+    validates_uniqueness_of :author_id, :scope => [:author_type, :resource_id, :resource_type, :container_id]
 
     unless (Rails::VERSION::STRING.to_f >= 4)
-  	  attr_accessible :resource_id, :resource_type, :author_type, :author_id, :value
+      attr_accessible :resource_id, :resource_type, :author_type, :author_id, :value
     end
 
     after_save :generate_estimate
 
-    def self.rated?(resource, author)
+    def self.rated?(resource, author, container = nil)
+      container_params = {}
+      if container.present?
+        container_params[:container_id] = container.id
+        container_params[:container_type] = container.class.base_class.name
+      end
       rate = where({
         author_type: author.class.base_class.name, author_id: author.id,
         resource_type: resource.class.base_class.name, resource_id: resource.id
-      })
+      }.merge(container_params))
       return rate if rate
       return false
     end
 
     def self.create(author, resource, value, comment, container = nil)
       return unless author && resource && value
-			atts = {
-			  resource_type: resource.class.base_class.name, resource_id: resource.id,
-			  author_type: author.class.base_class.name, author_id: author.id,
-			  value: value,
+      atts = {
+        resource_type: resource.class.base_class.name, resource_id: resource.id,
+        author_type: author.class.base_class.name, author_id: author.id,
+        value: value,
         comment: comment
-			}
+      }
       if container.present?
         atts[:container_id] = container.id
         atts[:container_type] = container.class.base_class.name
       end
-			rate = where(atts.except(:value)).first_or_initialize(atts)
-			rate.value = value
+      rate = where(atts.except(:value)).first_or_initialize(atts)
+      rate.value = value
       rate.save
       return rate
     end

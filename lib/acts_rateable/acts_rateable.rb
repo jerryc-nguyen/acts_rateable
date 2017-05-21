@@ -39,22 +39,22 @@ module ActsRateable
   module LocalInstanceMethods
 
 
-    def variation( author  )
-      rated_by?(author) ? (rated_by?(author).value/self.rating['estimate']) : nil
+    def variation( author, container = nil)
+      rated_by?(author, container) ? (rated_by?(author, container).value/self.rating['estimate']) : nil
     end
 
     # Checks wheter a resource has been rated by a user. Returns the rating if true, otherwise returns false.
-    def rated_by?( author  )
-      ActsRateable::Rate.rated?(self, author)
+    def rated_by?( author, container = nil)
+      ActsRateable::Rate.rated?(self, author, container)
     end
 
     # Checks wheter a user rated a resource. Returns the rating if true, otherwise returns false.
-    def has_rated?( resource  )
-      ActsRateable::Rate.rated?(resource, self)
+    def has_rated?( resource, container = nil)
+      ActsRateable::Rate.rated?(resource, self, container)
     end
 
     # Rates a resource by an author with a given value.
-    def rate( resource, value, comment=nil, container)
+    def rate( resource, value, comment=nil, container = nil)
       ActsRateable::Rate.create(self, resource, value, comment, container)
     end
 
